@@ -1,0 +1,58 @@
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color:  hsl(223, 19%, 93%);
+}
+
+.container .individualComment, 
+.container .user-input{
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 10px;
+    box-shadow: 10px 20px 50px hsl(223, 19%, 93%);
+    background-color: #ffffff;
+    margin: 10px;
+    padding: 10px
+}
+
+.container .individualComment .heading{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container .individualComment .commentFooter{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.container .individualComment .commentFooter .scoreButton{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: hsl(238, 40%, 52%); 
+    font-weight: 700;
+    border-radius: 5px;
+    padding: 2px 5px;
+    background-color: hsl(223, 19%, 93%);
+}
+
+.container .individualComment .commentFooter .reply{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: hsl(238, 40%, 52%); 
+    font-weight: 700;
+}
+
+.container .user-input .user-send{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.heading img, .user-send img{
+    width: 35px; 
+    height: auto;
+}
+
+
