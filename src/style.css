@@ -1,58 +1,117 @@
-body{
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color:  hsl(223, 19%, 93%);
 }
 
-.container .individualComment, 
-.container .user-input{
+body {
+    background-color: hsl(223, 19%, 93%);
+}
+
+.container{
+    margin: 0 20%; 
+}
+
+.container .replies-wrapper{
+    border-left: 2px solid hsl(239, 57%, 85%); 
+    margin: 15px;
+}
+.container .individualComment,
+.container .current-user-comment form{
     display: grid;
     grid-template-columns: 1fr;
     border-radius: 10px;
     box-shadow: 10px 20px 50px hsl(223, 19%, 93%);
     background-color: #ffffff;
-    margin: 10px;
-    padding: 10px
+    margin: 15px;
+    padding: 20px;
 }
 
-.container .individualComment .heading{
+.container .replies{
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 10px;
+    box-shadow: 10px 20px 50px hsl(223, 19%, 93%);
+    background-color: #ffffff;
+    margin: 15px 0 0 30px;
+    padding: 20px;
+}
+.container .replies .tag{
+    font-weight: 700;
+    color: hsl(238, 40%, 52%);
+}
+
+.container .heading {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+.container  .heading .name {
+    font-weight: 700;
+}
+
+.container  .content {
+    padding: 0 5px 10px 5px
+}
+
+.container  .comment-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.container .individualComment .commentFooter{
+.container .comment-footer .scoreButton {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-.container .individualComment .commentFooter .scoreButton{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: hsl(238, 40%, 52%); 
+    color: hsl(238, 40%, 52%);
     font-weight: 700;
     border-radius: 5px;
     padding: 2px 5px;
     background-color: hsl(223, 19%, 93%);
 }
 
-.container .individualComment .commentFooter .reply{
+.container .comment-footer .reply-btn-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: hsl(238, 40%, 52%); 
+}
+
+.container .comment-footer button.reply-btn {
+    border: none; 
+    background-color: #ffffff;
+    color: hsl(238, 40%, 52%);
     font-weight: 700;
 }
 
-.container .user-input .user-send{
+.container textarea{
+    width: 100%;
+    resize: vertical;
+    /* I used resize:vertical to allow only vertical resizing. 
+    This practice is used in most forms as it prevents annoying horizontal scrollbars. */
+    padding: 5px;
+    margin-bottom: 10px; 
+    border-radius: 10px;
+    border: 3px solid  hsl(223, 19%, 93%);
+    min-height: 100px;
+}
+
+.container button.submit-btn{
+    border: 1px solid  hsl(223, 19%, 93%);
+    border-radius: 10px;
+    background-color: hsl(238, 40%, 52%);
+    color: #ffffff; 
+    padding: 10px 20px;
+}
+
+.container .user-send {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.heading img, .user-send img{
-    width: 35px; 
+.heading img,
+.user-send img {
+    width: 35px;
     height: auto;
 }
-
-
