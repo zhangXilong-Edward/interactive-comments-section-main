@@ -7,18 +7,22 @@
 
 body {
     background-color: hsl(223, 19%, 93%);
+    height: 100%;
+    /* overflow-y: hidden; */
+
 }
 
-.container{
-    margin: 0 20%; 
+.container {
+    margin: 0 20%;
 }
 
-.container .replies-wrapper{
-    border-left: 2px solid hsl(239, 57%, 85%); 
+.container .replies-wrapper {
+    border-left: 2px solid hsl(239, 57%, 85%);
     margin: 15px;
 }
+
 .container .individualComment,
-.container .current-user-comment form{
+.container .current-user-comment form {
     display: grid;
     grid-template-columns: 1fr;
     border-radius: 10px;
@@ -28,7 +32,7 @@ body {
     padding: 20px;
 }
 
-.container .replies{
+.container .replies {
     display: grid;
     grid-template-columns: 1fr;
     border-radius: 10px;
@@ -37,24 +41,45 @@ body {
     margin: 15px 0 0 30px;
     padding: 20px;
 }
-.container .replies .tag{
+
+.container .replies .tag {
     font-weight: 700;
     color: hsl(238, 40%, 52%);
 }
 
 .container .heading {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto auto;
 }
-.container  .heading .name {
+
+.container .heading .name {
     font-weight: 700;
 }
 
-.container  .content {
+.container .heading .user-tag {
+    margin-left: 5px;
+    padding: 2px 5px;
+    background-color: hsl(238, 40%, 52%);
+    color: #ffffff;
+    border-radius: 5px;
+}
+
+.container .heading .delete {
+    color: red;
+    font-weight: 700;
+}
+
+.container .heading .edit {
+    color: hsl(238, 40%, 52%);
+    font-weight: 700;
+}
+
+
+.container .content {
     padding: 0 5px 10px 5px
 }
 
-.container  .comment-footer {
+.container .comment-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,6 +96,10 @@ body {
     background-color: hsl(223, 19%, 93%);
 }
 
+.container .comment-footer .scoreButton .score{
+    padding: 0 15px;
+}
+
 .container .comment-footer .reply-btn-wrapper {
     display: flex;
     justify-content: space-between;
@@ -78,40 +107,96 @@ body {
 }
 
 .container .comment-footer button.reply-btn {
-    border: none; 
+    border: none;
     background-color: #ffffff;
     color: hsl(238, 40%, 52%);
     font-weight: 700;
 }
 
-.container textarea{
+.container textarea {
     width: 100%;
     resize: vertical;
     /* I used resize:vertical to allow only vertical resizing. 
     This practice is used in most forms as it prevents annoying horizontal scrollbars. */
     padding: 5px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
     border-radius: 10px;
-    border: 3px solid  hsl(223, 19%, 93%);
+    border: 3px solid hsl(223, 19%, 93%);
     min-height: 100px;
 }
 
-.container button.submit-btn{
-    border: 1px solid  hsl(223, 19%, 93%);
+.container button.submit-btn, 
+.update-btn{
+    border: 1px solid hsl(223, 19%, 93%);
     border-radius: 10px;
     background-color: hsl(238, 40%, 52%);
-    color: #ffffff; 
-    padding: 10px 20px;
+    color: #ffffff;
+    padding: 8px 16px;
 }
 
-.container .user-send {
+.container .user-send-btn-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .heading img,
-.user-send img {
+.user-send-btn-wrapper img {
     width: 35px;
     height: auto;
 }
+
+/* overlay and modal CSS */
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 200ms;
+}
+.cancel {
+    background-color: hsl(212, 24%, 26%);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 5px;
+    font-size: 120%;
+    border: none;
+    padding: 10px;
+}
+.confirm {
+    background-color: hsl(357, 100%, 70%);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 5px;
+    font-size: 120%;
+    border: none;
+    padding: 10px;
+}
+.modal-button {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+
+
+/* CSS TO BE MANIPULATED BY DOM */
+.hidden{
+    display: none !important;
+}
+
