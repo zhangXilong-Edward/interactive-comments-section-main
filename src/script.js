@@ -14,9 +14,12 @@ function appendData(data) {
       </div>
     </form>
    `;
+
   //populate the comment section
   for (let i = 0; i < data.comments.length; i++) {
     let eachComment = document.createElement('div');
+
+    //if the current user then we need to give buttons for edit delete and the user tag
     if (data.currentUser.username == data.comments[i].user.username) {
       eachComment.innerHTML = `
       <div class="individualComment">
@@ -24,7 +27,7 @@ function appendData(data) {
           <img src="${data.comments[i].user.image.png}" alt="avatar">
           <span><span class="name">${data.comments[i].user.username}</span><span class="user-tag">You</span><span>
           <span class="time">${data.comments[i].createdAt}</span>
-          <span class="delete" >Delete</span>
+          <span class="delete" data-confirm="Are you sure to delete this item?">Delete</span>
           <span class="edit" >Edit</span>
         </div>
         <div class="content">
@@ -83,7 +86,7 @@ function appendData(data) {
            <img src="${data.comments[i].replies[j].user.image.png}" alt="avatar">
            <span><span class="name">${data.comments[i].user.username}</span><span class="user-tag">You</span></span>
            <span class="time">${data.comments[i].replies[j].createdAt}</span>
-           <span class="delete" >Delete</span>
+           <span   class="delete" data-confirm="Are you sure to delete this item?" >Delete</span>
            <span class="edit" >Edit</span>
           </div>
           <div class="content">
@@ -145,159 +148,192 @@ function appendData(data) {
 function addComment(data) {
   const sendBtns = document.querySelectorAll('.submit-btn');
   sendBtns.forEach((submitBtn) => {
-    submitBtn.addEventListener('click', () => {
-      console.log('click');
+    submitBtn.addEventListener('click', (e) => {
+
       let commentInput = document.querySelectorAll('.current-user-comment-text')[0].value;
       console.log(commentInput);
 
+      let repliedToDiv = e.target.parentNode.parentNode.parentNode;
       const currentUserNewComment = document.createElement('div');
-      currentUserNewComment.innerHTML = `
-      <div class="individualComment">
-       <div class="heading">
-            <img src="${data.currentUser.image.png}" alt="avatar">
-            <span><span class="name">${data.currentUser.username}</span><span class="user-tag">You</span></span>
-            <span class="time">Just Now</span>
-            <span class="delete" >Delete</span>
-            <span class="edit">Edit</span>
-       </div>
-       <div class="content">
-            <p>${commentInput}</p>
-       </div>
-       <div class="comment-footer" >
-          <div class="scoreButton">
-              <img src="images/icon-plus.svg" alt="upvote">
-              <span class="score">&nbsp; 0 &nbsp;</span>
-              <img src="images/icon-minus.svg" alt="downvote">
-          </div>
-          <div class="reply-btn-wrapper">
-              <img src="images/icon-reply.svg" alt="reply">
-              <button type="button" class="reply-btn">Reply</button>
-          </div>
-       </div>
-      </div>
-      `;
+
+      if (repliedToDiv.classList.contains('replies')) {
+        currentUserNewComment.innerHTML = `
+        <div class="replies">
+         <div class="heading">
+              <img src="${data.currentUser.image.png}" alt="avatar">
+              <span><span class="name">${data.currentUser.username}</span><span class="user-tag">You</span></span>
+              <span class="time">Just Now</span>
+              <span   class="delete" data-confirm="Are you sure to delete this item?" >Delete</span>
+              <span class="edit">Edit</span>
+         </div>
+         <div class="content">
+         <p class="tag"></p> 
+              <p>${commentInput}</p>
+         </div>
+         <div class="comment-footer" >
+            <div class="scoreButton">
+                <img src="images/icon-plus.svg" alt="upvote">
+                <span class="score">&nbsp; 0 &nbsp;</span>
+                <img src="images/icon-minus.svg" alt="downvote">
+            </div>
+            <div class="reply-btn-wrapper">
+                <img src="images/icon-reply.svg" alt="reply">
+                <button type="button" class="reply-btn">Reply</button>
+            </div>
+         </div>
+        </div>
+        `;
+      } else {
+        currentUserNewComment.innerHTML = `
+        <div class="individualComment">
+         <div class="heading">
+              <img src="${data.currentUser.image.png}" alt="avatar">
+              <span><span class="name">${data.currentUser.username}</span><span class="user-tag">You</span></span>
+              <span class="time">Just Now</span>
+              <span   class="delete" data-confirm="Are you sure to delete this item?" >Delete</span>
+              <span class="edit">Edit</span>
+         </div>
+         <div class="content">
+         <p class="tag"></p> 
+              <p>${commentInput}</p>
+         </div>
+         <div class="comment-footer" >
+            <div class="scoreButton">
+                <img src="images/icon-plus.svg" alt="upvote">
+                <span class="score">&nbsp; 0 &nbsp;</span>
+                <img src="images/icon-minus.svg" alt="downvote">
+            </div>
+            <div class="reply-btn-wrapper">
+                <img src="images/icon-reply.svg" alt="reply">
+                <button type="button" class="reply-btn">Reply</button>
+            </div>
+         </div>
+        </div>
+        `;
+      };
+
+
+
+
+
       commentsDiv.append(currentUserNewComment);
       document.querySelectorAll('.current-user-comment-text')[0].value = '';
+
+      if (e.target.classList.contains('send-reply')) {
+        const commentedToDiv = e.target.parentNode.parentNode.parentNode;
+        console.log(commentedToDiv)
+        commentedToDiv.parentNode.insertBefore(currentUserNewComment, commentedToDiv.nextSibling);
+        commentedToDiv.remove();
+      }
+
       deleteComment(data);
+      editComment(data)
+
     })
   })
 
 }
 // Function to add a reply to a comment
 function addReply(data) {
-  const replyBtns = document.querySelectorAll('.reply-btn'); 
-  replyBtns.forEach((e)=>{
-    e.addEventListener('click', (e)=>{
-      const replyDiv = document.createElement('div'); 
-      let repliedToDiv = e.target.parentNode.parentNode.parentNode; 
+  const replyBtns = document.querySelectorAll('.reply-btn');
+
+  replyBtns.forEach((e) => {
+    e.addEventListener('click', (e) => {
+      const replyDiv = document.createElement('div');
+      let repliedToDiv = e.target.parentNode.parentNode.parentNode;
 
       console.log(data.currentUser.image.png)
-      if(repliedToDiv.classList.contains('replies')) {
-        replyDiv.innerHTML=`
+
+      if (repliedToDiv.classList.contains('replies')) {
+        replyDiv.innerHTML = `
         <div class="replies">
         <form>
-         <textarea type="text" name="text" class="current-user-comment-text" placeholder="Add a comment..."></textarea>
+         <textarea type="text" name="text" class="current-user-comment-text" placeholder="Add a reply..."></textarea>
          <div class="user-send-btn-wrapper">
           <img src="${data.currentUser.image.png}"alt="avatar">
-          <button type="button" class="submit-btn">SEND</button>
+          <button type="button" class="submit-btn send-reply">SEND REPLY</button>
          </div>
        </form>
        </div>
         `;
       } else {
-        replyDiv.innerHTML=`
+        replyDiv.innerHTML = `
         <div class="individualComment">
         <form>
-         <textarea type="text" name="text" class="current-user-comment-text" placeholder="Add a comment..."></textarea>
+         <textarea type="text" name="text" class="current-user-comment-text" placeholder="Add a reply..."></textarea>
          <div class="user-send-btn-wrapper">
           <img src="${data.currentUser.image.png}" alt="avatar">
-          <button type="button" class="submit-btn">SEND</button>
+          <button type="button" class="submit-btn send-reply">SEND REPLY</button>
          </div>
        </form>
        </div>
         `;
       }
       repliedToDiv.insertAdjacentHTML("afterend", replyDiv.innerHTML);
-      
+
+      addComment(data);
+
     })
   })
 }
-
 function deleteComment() {
-  const deleteBtns = document.querySelectorAll('.delete');
-  const confirmBtn = document.getElementById('confirm');
-  const cancelBtn = document.getElementById('cancel');
-  const overlay = document.getElementById('overlay');
-  const modal = document.getElementById('modal');
-
-  deleteBtns.forEach((e) => {
-    e.addEventListener('click', () => {
-      console.log('delete clicked')
-      window.scrollTo(0, 0);
-      overlay.classList.remove('hidden');
-      modal.classList.remove('hidden');
-    })
-
-    confirmBtn.addEventListener('click', () => {
-      e.parentNode.parentNode.parentNode.remove();
-      modal.classList.add('hidden');
-      overlay.classList.add('hidden')
-    })
-
-    cancelBtn.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      overlay.classList.add('hidden')
-    })
-
-  })
+ console.log('delete is yet appplied'); 
 }
 
 function editComment() {
-  const editBtns = document.querySelectorAll('.edit'); 
+  const editBtns = document.querySelectorAll('.edit');
+  editBtns.forEach((btn) => {
+    console.log('edit clicked')
 
-  editBtns.forEach((btn)=>[
-    btn.addEventListener('click', (e)=>{
-      console.log(e.target.parentNode.nextElementSibling.childNodes[3]); 
-      e.target.parentNode.nextElementSibling.childNodes[3].setAttribute('contenteditable', 'true'); 
-      e.target.parentNode.nextElementSibling.childNodes[3].focus(); 
+    btn.addEventListener('click', (e) => {
 
-      const updateBtn = document.createElement('button'); 
+      console.log(e.target.parentNode.nextElementSibling.childNodes)
+      console.log(e.target.parentNode.nextElementSibling.childNodes[3]);
+      e.target.parentNode.nextElementSibling.childNodes[3].setAttribute('contenteditable', 'true');
+      e.target.parentNode.nextElementSibling.childNodes[3].focus();
+
+      const updateBtn = document.createElement('button');
       updateBtn.classList.add('update-btn');
-      updateBtn.innerText='UPDATE'; 
-      console.log(updateBtn)
-  
-      e.target.parentNode.nextElementSibling.append(updateBtn); 
+      updateBtn.innerText = 'UPDATE';
 
-      updateBtn.addEventListener('click', ()=>{
-        e.target.parentNode.nextElementSibling.childNodes[3].setAttribute('contenteditable', 'false'); 
-        updateBtn.classList.add('hidden')
+      let updateBtnCheck = document.getElementsByClassName('update-btn');
+      console.log(updateBtnCheck)
+      if (updateBtnCheck.length == 0) {
+        e.target.parentNode.nextElementSibling.append(updateBtn);
+      }
+
+
+      updateBtn.addEventListener('click', () => {
+        e.target.parentNode.nextElementSibling.childNodes[3].setAttribute('contenteditable', 'false');
+        updateBtn.remove();
+
       })
     })
-  ])
+  })
 }
 
 function upvote() {
-  const upvoteBtns = document.querySelectorAll('.upvote'); 
-  const downvoteBtns = document.querySelectorAll('.downvote'); 
+  const upvoteBtns = document.querySelectorAll('.upvote');
+  const downvoteBtns = document.querySelectorAll('.downvote');
 
-  upvoteBtns.forEach((e)=>{
-    e.addEventListener('click', (e)=>{
-      let scoreCurrent = e.target.nextElementSibling.innerText; 
-      scoreCurrent++; 
-      e.target.nextElementSibling.innerHTML = `${scoreCurrent}`; 
-  })
+  upvoteBtns.forEach((e) => {
+    e.addEventListener('click', (e) => {
+      let scoreCurrent = e.target.nextElementSibling.innerText;
+      scoreCurrent++;
+      e.target.nextElementSibling.innerHTML = `${scoreCurrent}`;
+    })
   })
 }
 
 function downvote() {
-  const downvoteBtns = document.querySelectorAll('.downvote'); 
+  const downvoteBtns = document.querySelectorAll('.downvote');
 
-  downvoteBtns.forEach((e)=>{
-    e.addEventListener('click', (e)=>{
-      let scoreCurrent = e.target.previousElementSibling.innerText; 
-      scoreCurrent--; 
-      e.target.previousElementSibling.innerText = scoreCurrent; 
-  })
+  downvoteBtns.forEach((e) => {
+    e.addEventListener('click', (e) => {
+      let scoreCurrent = e.target.previousElementSibling.innerText;
+      scoreCurrent--;
+      e.target.previousElementSibling.innerText = scoreCurrent;
+    })
   })
 }
 
@@ -310,9 +346,9 @@ fetch('../data.json')
     addComment(data);
     addReply(data);
     deleteComment();
-    editComment(); 
-    upvote(); 
-    downvote(); 
+    editComment();
+    upvote();
+    downvote();
   })
   .catch((err) => {
     console.log(err);
